@@ -24,7 +24,7 @@
             justify-content: center;
             align-items: center;
             height: 100%;
-            background-image: url(images/snowy.jpg);
+            background-image: url(images/breezy.jpg);
             background-repeat: no-repeat;
             background-size: cover;
            
@@ -46,7 +46,7 @@
             padding: 15px;
             width: 100%;
             height: 150px;
-            background: url(images/sunny.png) no-repeat  ;
+            background: url(images/breezy.png) no-repeat  ;
         }
         .weather-infos{
             padding: 10px;
@@ -132,10 +132,8 @@
             wind speed : ${json.currently.windSpeed} <br/>
 
             `);
-            console.log(json.currently.summary.includes("Clear"));
-            if(json.currently.summary.includes("Clear")){
-                $("#wrapper").css("background-image","url(images/sunny.jpg)");
-            }
+            
+             //handleBackground(json.currently.summary);
             
             
              $(".moreInfos").click(showMore);
@@ -156,6 +154,24 @@
             
         }
         
+        function handleBackground(summary){
+             if(summary.match(/clear/gi) || summary.match(/sunny/gi)){
+                $("#wrapper").css("background-image","url(https://raw.githubusercontent.com/xpack94/local-weather/master/images/sunny.jpg)");
+                $(".weather-picture").css("background-image","url(https://raw.githubusercontent.com/xpack94/local-weather/master/images/sunny.png)");
+            } else if(summary.match(/cloud/gi)){
+                $("#wrapper").css("background-image","url(https://raw.githubusercontent.com/xpack94/local-weather/master/images/cloudy.jpg)");
+               $(".weather-picture").css("background-image","url(https://raw.githubusercontent.com/xpack94/local-weather/master/images/partly-cloudy.png)");
+            }else if(summary.match(/snowy/gi)){
+                 $("#wrapper").css("background-image","url(https://raw.githubusercontent.com/xpack94/local-weather/master/images/snowy.jpg)");
+                $(".weather-picture").css("background-image","url(https://raw.githubusercontent.com/xpack94/local-weather/master/images/snowy.png)");
+            }else if(summary.match(/rainy/gi)){
+                $("#wrapper").css("background-image","url(https://raw.githubusercontent.com/xpack94/local-weather/master/images/rain.jpg)");
+                $(".weather-picture").css("background-image","url(https://raw.githubusercontent.com/xpack94/local-weather/master/images/rainny.png)");
+            }else{
+                //last one is breezy
+                
+            }
+        }
     </script>
 </body>
 </html>
