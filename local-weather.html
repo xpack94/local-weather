@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>local weather</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
+    
+    
+    
+    <style>
+        body,html{
+            height: 100%;
+        }
+        #wrapper{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            background-image: url(images/snowy.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+           
+        }
+        .weather-box{
+            width: 250px;
+            font-size: 1em;
+            line-height: 1.5;
+            border:3px solid rgba(0,0,0,0.5);
+            box-shadow: 10px 10px 5px rgba(0,0,0,0.5);
+            padding-top: 10px;
+            background-color: rgba(0,0,0,0.8);
+            color:aliceblue;
+            position: relative;
+            
+        }
+     
+        .weather-picture{
+            padding: 15px;
+            width: 100%;
+            height: 150px;
+            background: url(images/sunny.png) no-repeat  ;
+        }
+        .weather-infos{
+            padding: 10px;
+        }
+        .city{
+            font-family: 'Oswald', sans-serif;
+        }
+        .moreInfos,.lessInfos{
+            position: absolute;
+            bottom: 9px;
+            right:0;
+            margin-right: 29px;
+            color:rgba(255,255,255,0.8);
+        }
+        
+        .moreInfos:hover ,.lessInfos:hover{
+            transform: scale(1.1);
+            color:rgba(255,255,255,1);
+        }
+    
+    
+    </style>
+</head>
+<body>
+  
+    
+      <div id="wrapper">
+          <div class="weather-box container-fluid">
+              <div class="weather-picture"></div>
+             <div class="weather-infos">
+                  <div class="city-name"></div>
+                  <div class="weather"></div>
+             </div>
+              
+              <a href="#" class="text-center moreInfos" ><span class="caret">More</span></a>
+          </div>
+          
+          
+      </div>
+          
+    
+    
+    
+    
+    <script>
+    //api to get the latitude and longtitude http://ip-api.com/json
+    //https://api.darksky.net/forecast/f9aea443d2835816a29f32b1a63b5aea/    
+    
+      $(function(){
+                var loc=null;
+                let api=null;
+          getLocation();
+         
+      });
+        
+            
+
+              function getLocation(){
+            
+                  $.getJSON("https://ipinfo.io/json",function(json){
+                      loc=json.loc;
+                      $(".city-name").html(json.city);
+                        weather(loc);
+                  });
+                  
+                        
+                
+            }
+        
+        
+        function weather(loc){
+             $.getJSON(`https://api.darksky.net/forecast/f9aea443d2835816a29f32b1a63b5aea/${loc}`,displayWeather);
+
+        }
+    
+        function displayWeather(json){
+           
+            api=json.currently;
+            $(".weather").html(`
+            ${json.currently.summary} <br/>
+            Temperature : ${json.currently.apparentTemperature} F <br/>
+            Humidity : ${json.currently.humidity} <br/>
+            wind speed : ${json.currently.windSpeed} <br/>
+
+            `);
+            console.log(json.currently.summary.includes("Clear"));
+            if(json.currently.summary.includes("Clear")){
+                $("#wrapper").css("background-image","url(images/sunny.jpg)");
+            }
+            
+            
+             $(".moreInfos").click(showMore);
+        }
+        function showMore(json){
+            let text= $(".weather").html();
+            text+=`
+            Cloud cover :${api.cloudCover}<br/>
+            Visibility : ${api.visibility} <br/>
+            Pressure :${api.pressure} <br/>
+            wind bearing :${api.windBearing} <br>
+            Ozone :${api.ozone} <br/>
+
+            `
+          $(".weather").html(text);
+         $(".moreInfos").unbind("click").css("display","none");
+           
+            
+        }
+        
+    </script>
+</body>
+</html>
